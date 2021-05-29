@@ -1,7 +1,10 @@
+using AlkemyTest.Data;
+using AlkemyTest.Data.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,14 +26,23 @@ namespace AlkemyTest
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //configurar Db Context
+            services.AddDbContext<DataContext>(options =>
+              options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+
+            //configura services
+            services.AddTransient<CharacterService>();
+
+
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AlkemyTest", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alkemy Test", Version = "v1" });
             });
         }
 
@@ -54,6 +66,8 @@ namespace AlkemyTest
             {
                 endpoints.MapControllers();
             });
+
+            DbSeeder.Seed(app);
         }
     }
 }
