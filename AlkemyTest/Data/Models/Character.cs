@@ -14,7 +14,9 @@ namespace AlkemyTest.Data.Models
         [Required(ErrorMessage = "{0} is required")]
         [MaxLength(50)]
         public string Name { get; set; }
+
         public int Age { get; set; }
+
         public float Weight { get; set; }
         public string History { get; set; }
         public List<Character_Movie> Character_Movies { get; set; }

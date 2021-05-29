@@ -26,16 +26,15 @@ namespace AlkemyTest.Data.Services
                 //TODO: agregar peliculas
                 try
                 {
-                    Character nuevo = new Character()
+                    Character _character = new Character()
                     {
                         Image = character.Image,
                         Name = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(character.Name),
                         Weight = character.Weight,
                         Age = character.Age,
                         History = character.History
-                        //nuevo.Casts = character.Casts;
                     };
-                    _context.Characters.Add(nuevo);
+                    _context.Characters.Add(_character);
                     _context.SaveChanges();
                 }
                 catch (Exception)

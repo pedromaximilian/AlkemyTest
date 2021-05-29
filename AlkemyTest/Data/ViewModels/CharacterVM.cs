@@ -8,6 +8,7 @@ namespace AlkemyTest.Data.ViewModels
     public class CharacterVM
     {
         //TODO: duplicados con excepcion 63
+        public int Id { get; set; }
         public string Image { get; set; }
         public string Name { get; set; }
         public int Age { get; set; }

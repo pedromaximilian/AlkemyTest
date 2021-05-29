@@ -40,7 +40,7 @@ namespace AlkemyTest.Controllers
 
         // GET: api/Characters
         [HttpGet]
-        public  IActionResult GetCharacters()
+        public  IActionResult Get()
         {
             try
             {
@@ -49,8 +49,34 @@ namespace AlkemyTest.Controllers
             }
             catch (Exception)
             {
-                return BadRequest();
+                return NotFound();
             }
+        }
+
+
+        // GET api/Characters/5
+        [HttpGet("{id}")]
+        public string Get(int id)
+        {
+            return "value";
+        }
+
+        // POST api/<MoviesController>
+        [HttpPost]
+        public void Post([FromBody] string value)
+        {
+        }
+
+        // PUT api/Characters/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/Characters/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
         }
 
 
