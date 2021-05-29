@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 
 namespace AlkemyTest.Data.Models
 {
-    public class Character
+    public class Movie
     {
-        //TODO: duplicados con excepcion 63
         public int Id { get; set; }
         public string Image { get; set; }
         [Required(ErrorMessage = "{0} is required")]
-        [MaxLength(50)]
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public float Weight { get; set; }
-        public string History { get; set; }
+        public string Title { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime CreatedAt { get; set; }
+        [Range(1, 5)]
+        public byte Qualification { get; set; }
+
         public List<Character_Movie> Character_Movies { get; set; }
+
     }
 }
