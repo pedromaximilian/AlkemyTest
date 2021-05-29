@@ -28,7 +28,7 @@ namespace AlkemyTest.Controllers
         {
             try
             {
-                _characterService.AddCharacter(character);
+                _characterService.Add(character);
                 //TODO: podria devolver el ultimo id creado.
                 return Ok();
             }
@@ -37,5 +37,22 @@ namespace AlkemyTest.Controllers
                 return BadRequest("Transacción Inválida");
             }
         }
+
+        // GET: api/Characters
+        [HttpGet]
+        public  IActionResult GetCharacters()
+        {
+            try
+            {
+                var chars = _characterService.GetNameImage();
+                return Ok(chars);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+
     }
 }

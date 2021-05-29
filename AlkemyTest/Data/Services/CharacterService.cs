@@ -1,5 +1,7 @@
 ﻿using AlkemyTest.Data.Models;
 using AlkemyTest.Data.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,9 +19,8 @@ namespace AlkemyTest.Data.Services
             _context = context;
         }
 
-        public void AddCharacter(CharacterVM character) {
-
-            // Validamos nombres duplicados
+        public void Add(CharacterVM character) {
+            // duplicated name validation
             if (!_context.Characters.Any(t => t.Name.Equals(character.Name)))
             {
                 //TODO: agregar peliculas
@@ -44,11 +45,35 @@ namespace AlkemyTest.Data.Services
             }
             else
             {
-                //Control de la excepcion SQL por nombre duplicado
                 throw new();
             }
 
 
         }
+
+        public List<CharacterVM> GetAll() {
+        
+            return  _context.Characters.Select(p => new CharacterVM
+            {
+                Image = p.Image,
+                Name = p.Name,
+                Age = p.Age,
+                Weight = p.Weight,
+                History = p.History
+            }).ToList();
+        }
+
+        public List<CharacterNameImageVM> GetNameImage()
+        {
+
+            return _context.Characters.Select(p => new CharacterNameImageVM
+            {
+                Image = p.Image,
+                Name = p.Name
+            }).ToList();
+        }
+
+
+
     }
 }
