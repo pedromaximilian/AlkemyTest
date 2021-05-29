@@ -16,7 +16,6 @@ namespace AlkemyTest.Data.Models
         public DateTime CreatedAt { get; set; }
         [Range(1, 5)]
         public byte Qualification { get; set; }
-
         public List<Character_Movie> Character_Movies { get; set; }
 
     }
