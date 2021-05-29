@@ -17,7 +17,7 @@ namespace AlkemyTest.Data
         public  DbSet<Movie> Movies { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public  DbSet<Character_Movie> Character_Movies { get; set; }
-        public DbSet<Movie_Genre> GetMovie_Genres { get; set; }
+        public DbSet<Movie_Genre> Movie_Genres { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

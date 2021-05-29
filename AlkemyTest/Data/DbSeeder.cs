@@ -16,6 +16,9 @@ namespace AlkemyTest.Data
             {
                 var context = serviceScope.ServiceProvider.GetService<DataContext>();
 
+
+                //dont forget to run update database
+
                 if (!context.Characters.Any())
                 {
                     context.Characters.AddRange(new Character()
