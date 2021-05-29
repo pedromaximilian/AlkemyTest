@@ -17,6 +17,7 @@ namespace AlkemyTest.Data.Models
         [Range(1, 5)]
         public byte Qualification { get; set; }
         public List<Character_Movie> Character_Movies { get; set; }
+        public List<Movie_Genre> Movie_Genres { get; set; }
 
     }
 }
