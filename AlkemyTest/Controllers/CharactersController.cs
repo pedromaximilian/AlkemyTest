@@ -22,22 +22,6 @@ namespace AlkemyTest.Controllers
             _characterService = characterService;
         }
 
-        // POST: api/Characters
-        [HttpPost]
-        public IActionResult PostCharacter(CharacterVM character)
-        {
-            try
-            {
-                _characterService.Add(character);
-                //TODO: podria devolver el ultimo id creado.
-                return Ok();
-            }
-            catch (Exception)
-            {
-                return BadRequest("Transacción Inválida");
-            }
-        }
-
         // GET: api/Characters
         [HttpGet]
         public  IActionResult Get()
@@ -53,30 +37,81 @@ namespace AlkemyTest.Controllers
             }
         }
 
-
         // GET api/Characters/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            var _character = _characterService.GetById(id);
+            if (_character != null)
+            {
+                return Ok(_character);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
-        // POST api/<MoviesController>
+
+        // POST: api/Characters
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult PostCharacter(CharacterVM character)
         {
+            try
+            {
+                //TODO: podria devolver el ultimo id creado.
+                var response = _characterService.Add(character);
+
+                    return Ok(new {id = response });
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT api/Characters/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, CharacterVM characterVM)
         {
+            try
+            {
+                var message = _characterService.Update(id, characterVM);
+
+                if (message.Equals("Ok"))
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(message);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
         }
 
         // DELETE api/Characters/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+
+            var response = _characterService.Delete(id);
+
+            if (response.Equals("Ok"))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(response);
+            }
+
         }
 
 
