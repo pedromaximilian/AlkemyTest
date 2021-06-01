@@ -39,7 +39,7 @@ namespace AlkemyTest.Controllers
 
         // GET api/Movies/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult GetById(int id)
         {
             MovieVM _movie = _movieService.GetById(id);
             if (_movie != null)
