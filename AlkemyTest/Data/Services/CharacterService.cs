@@ -155,10 +155,10 @@ namespace AlkemyTest.Data.Services
 
         }
 
-        public List<CharacterNameImageVM> GetNameImage()
+        public List<CharacterGetVM> GetNameImage()
         {
 
-            return _context.Characters.Select(p => new CharacterNameImageVM
+            return _context.Characters.Select(p => new CharacterGetVM
             {
                 Image = p.Image,
                 Name = p.Name

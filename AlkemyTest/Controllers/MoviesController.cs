@@ -24,7 +24,7 @@ namespace AlkemyTest.Controllers
         {
             try
             {
-                List<MovieVM> _movies = _movieService.GetAll(filter);
+                List<MovieGetVM> _movies = _movieService.GetAll(filter);
 
 
                 return Ok(_movies);

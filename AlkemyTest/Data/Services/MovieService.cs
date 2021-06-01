@@ -47,66 +47,94 @@ namespace AlkemyTest.Data.Services
             }
         }
 
-        public List<MovieVM> GetAll(MovieFilter filter)
+        public List<MovieGetVM> GetAll(MovieFilter filter)
         {
             try
             {
-                var _movies = _context.Movies.Select(t => new MovieVM
+
+                if (filter.Name != null || filter.Order != null || filter.GenreId != 0)
                 {
-                    Id = t.Id,
-                    Image = t.Image,
-                    Title = t.Title,
-                    CreatedAt = t.CreatedAt,
-                    Qualification = t.Qualification,
-                    Genres = t.Movie_Genres.Select(mg => new GenreVM()
+                    var _movies = _context.Movies.Select(t => new MovieVM
                     {
-                        Id = mg.Genre.Id,
-                        Name = mg.Genre.Name,
-                        Image = mg.Genre.Image
-                    }).ToList(),
-                    Characters = t.Character_Movies.Select(cm => new CharacterVM()
+                        Id = t.Id,
+                        Image = t.Image,
+                        Title = t.Title,
+                        CreatedAt = t.CreatedAt,
+                        Qualification = t.Qualification,
+                        Genres = t.Movie_Genres.Select(mg => new GenreVM()
+                        {
+                            Id = mg.Genre.Id,
+                            Name = mg.Genre.Name,
+                            Image = mg.Genre.Image
+                        }).ToList(),
+                        Characters = t.Character_Movies.Select(cm => new CharacterVM()
+                        {
+                            Id = cm.Character.Id,
+                            Image = cm.Character.Image,
+                            Name = cm.Character.Name,
+                            Age = cm.Character.Age,
+                            Weight = cm.Character.Weight,
+                            History = cm.Character.History
+                        }).ToList()
+                    }).ToList();
+                    //TODO: refactor query
+                    if (filter.GenreId != 0)
                     {
-                        Id = cm.Character.Id,
-                        Image = cm.Character.Image,
-                        Name = cm.Character.Name,
-                        Age = cm.Character.Age,
-                        Weight = cm.Character.Weight,
-                        History = cm.Character.History
-                    }).ToList()
-                }).ToList();
-                
+                        _movies = _movies.Where(t => t.Genres.Any(n => n.Id == filter.GenreId)).ToList();
+                    }
+                    if (filter.Name != null)
+                    {
+                        _movies = _movies.Where(x => x.Title.ToLower().Contains(filter.Name)).ToList();
+                    }
 
-                //TODO: refactor query
-                if (filter.GenreId != 0)
-                {
 
-                    //SectionList.Select(sections => sections.SideList.Select(sides => sides.PositionList.Where(ps => ps.Position >= 1 && ps.Position <= 5))).ToList();
-                    //var a = _movies.Select(x => x.Genres.Where(x => x.Id == filter.GenreId));
+                    if (filter.Order != null)
+                    {
+                        if (filter.Order.ToLower() == "asc")
+                        {
+                            _movies = _movies.OrderBy(x => x.Title).ToList();
+                        }
+                        if (filter.Order.ToLower() == "desc")
+                        {
+                            _movies = _movies.OrderByDescending(x => x.Title).ToList();
+                        }
+                    }
 
-                    _movies = _movies.Where(t => t.Genres.Any(n => n.Id == filter.GenreId)).ToList();
+                   
+
+
+
+                    var res = _movies.Select(t => new MovieGetVM
+                    {
+                        Image = t.Image,
+                        Title = t.Title,
+                        CreatedAt = t.CreatedAt
+                    }).ToList();
+
+                    return res;
+
                 }
-                if (filter.Name != null)
-                {
-                    _movies = _movies.Where(x => x.Title.ToLower().Contains(filter.Name)).ToList();
+                else {
+                    var _movies = _context.Movies.Select(t => new MovieGetVM
+                    {
+                        Image = t.Image,
+                        Title = t.Title,
+                        CreatedAt = t.CreatedAt,                        
+                    }).ToList();
+
+
+                    return _movies;
+
+
                 }
 
-                if (filter.Order.ToLower() == "asc")
-                {
-                    _movies = _movies.OrderBy(x => x.Title).ToList();
-                }
-                if (filter.Order.ToLower() == "desc")
-                {
-                    _movies = _movies.OrderByDescending(x => x.Title).ToList();
-                }
 
-                return _movies;
+
             }
             catch (Exception)
             {
                 throw;
             }
-
-
         }
 
         public MovieVM GetById(int id)

@@ -23,7 +23,7 @@ namespace AlkemyTest.Controllers
         {
             try
             {
-                List<CharacterNameImageVM> chars = _characterService.GetNameImage();
+                List<CharacterGetVM> chars = _characterService.GetNameImage();
                 return Ok(chars);
             }
             catch (Exception)
