@@ -1,5 +1,7 @@
 ﻿using AlkemyTest.Data.Models;
 using AlkemyTest.Data.ViewModels;
+using AlkemyTest.QueryFiltesrs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -45,11 +47,11 @@ namespace AlkemyTest.Data.Services
             }
         }
 
-        public List<MovieVM> GetAll()
+        public List<MovieVM> GetAll(MovieFilter filter)
         {
             try
             {
-                List<MovieVM> _movies = _context.Movies.Select(t => new MovieVM
+                var _movies = _context.Movies.Select(t => new MovieVM
                 {
                     Id = t.Id,
                     Image = t.Image,
@@ -72,6 +74,31 @@ namespace AlkemyTest.Data.Services
                         History = cm.Character.History
                     }).ToList()
                 }).ToList();
+                
+
+                //TODO: refactor query
+                if (filter.GenreId != 0)
+                {
+
+                    //SectionList.Select(sections => sections.SideList.Select(sides => sides.PositionList.Where(ps => ps.Position >= 1 && ps.Position <= 5))).ToList();
+                    //var a = _movies.Select(x => x.Genres.Where(x => x.Id == filter.GenreId));
+
+                    _movies = _movies.Where(t => t.Genres.Any(n => n.Id == filter.GenreId)).ToList();
+                }
+                if (filter.Name != null)
+                {
+                    _movies = _movies.Where(x => x.Title.ToLower().Contains(filter.Name)).ToList();
+                }
+
+                if (filter.Order.ToLower() == "asc")
+                {
+                    _movies = _movies.OrderBy(x => x.Title).ToList();
+                }
+                if (filter.Order.ToLower() == "desc")
+                {
+                    _movies = _movies.OrderByDescending(x => x.Title).ToList();
+                }
+
                 return _movies;
             }
             catch (Exception)

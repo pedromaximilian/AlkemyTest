@@ -164,6 +164,7 @@ namespace AlkemyTest.Data
                     //*******************************************************
                     //
                     //              run update-database command
+                    //                  at least one time
                     //
                     //*******************************************************
                     throw new("Possible database connection error");
