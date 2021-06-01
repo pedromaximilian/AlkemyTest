@@ -15,7 +15,7 @@ namespace AlkemyTest.Data.ViewModels
         public string Title { get; set; }
         public DateTime CreatedAt { get; set; }
         public byte Qualification { get; set; }
-        public List<Character_Movie> Character_Movies { get; set; }
-        public List<Movie_Genre> Movie_Genres { get; set; }
+        public List<CharacterVM> Characters { get; set; }
+        public List<GenreVM> Genres { get; set; }
     }
 }

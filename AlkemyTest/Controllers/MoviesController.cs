@@ -9,24 +9,16 @@ using System.Threading.Tasks;
 
 namespace AlkemyTest.Controllers
 {
-
-
-
-
     [Route("api/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase
     {
-
-
-
         private readonly MovieService _movieService;
 
         public MoviesController(MovieService movieService)
         {
             _movieService = movieService;
         }
-
 
         // GET: api/Movies
         [HttpGet]

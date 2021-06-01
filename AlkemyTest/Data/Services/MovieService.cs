@@ -1,8 +1,10 @@
 ﻿using AlkemyTest.Data.Models;
 using AlkemyTest.Data.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AlkemyTest.Data.Services
 {
@@ -28,6 +30,7 @@ namespace AlkemyTest.Data.Services
                         Title = movieVM.Title,
                         CreatedAt = movieVM.CreatedAt,
                         Qualification = movieVM.Qualification
+
                     };
                     _context.Movies.Add(_movie);
                     _context.SaveChanges();
@@ -43,16 +46,45 @@ namespace AlkemyTest.Data.Services
             }
         }
 
-        public List<MovieVM> GetAll() {
-
-            return _context.Movies.Select(t => new MovieVM
+        public  List<MovieVM> GetAll() {
+            try
             {
-                Id = t.Id,
-                Image = t.Image,
-                Title = t.Title,
-                CreatedAt = t.CreatedAt,
-                Qualification = t.Qualification
-            }).ToList();
+
+                var _movies = _context.Movies.Select(t => new MovieVM
+                {
+                    Id = t.Id,
+                    Image = t.Image,
+                    Title = t.Title,
+                    CreatedAt = t.CreatedAt,
+                    Qualification = t.Qualification,
+                    Genres = t.Movie_Genres.Select(mg => new GenreVM()
+                    {
+                        Id = mg.Genre.Id,
+                        Name = mg.Genre.Name,
+                        Image = mg.Genre.Image
+                    }).ToList(),
+                    Characters = t.Character_Movies.Select(cm => new CharacterVM()
+                    {
+                        Id = cm.Character.Id,
+                        Image = cm.Character.Image,
+                        Name = cm.Character.Name,
+                        Age = cm.Character.Age,
+                        Weight = cm.Character.Weight,
+                        History = cm.Character.History
+
+                    }).ToList()
+
+                }).ToList();
+
+                return _movies;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            
         }
 
 
