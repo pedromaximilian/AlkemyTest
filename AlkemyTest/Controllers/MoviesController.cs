@@ -1,11 +1,8 @@
 ﻿using AlkemyTest.Data.Services;
+using AlkemyTest.Data.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-
 
 namespace AlkemyTest.Controllers
 {
@@ -26,7 +23,7 @@ namespace AlkemyTest.Controllers
         {
             try
             {
-                var _movies = _movieService.GetAll();
+                List<MovieVM> _movies = _movieService.GetAll();
                 return Ok(_movies);
 
             }
@@ -37,32 +34,77 @@ namespace AlkemyTest.Controllers
             }
 
 
-            
+
         }
 
-        // GET api/<MoviesController>/5
+        // GET api/Movies/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            MovieVM _movie = _movieService.GetById(id);
+            if (_movie != null)
+            {
+                return Ok(_movie);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
-        // POST api/<MoviesController>
+        // POST api/Movies
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post(MovieVM _movieVM)
         {
+            try
+            {
+                //TODO: devuelve el ultimo id creado.
+                int response = _movieService.Add(_movieVM);
+                return Ok(new { id = response });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT api/<MoviesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, MovieVM _movieVM)
         {
+            try
+            {
+                string message = _movieService.Update(id, _movieVM);
+
+                if (message.Equals("Ok"))
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(message);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE api/<MoviesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            string response = _movieService.Delete(id);
+            if (response.Equals("Ok"))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(response);
+            }
         }
     }
 }

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AlkemyTest.Data.Services
 {
@@ -17,9 +16,9 @@ namespace AlkemyTest.Data.Services
             _context = context;
         }
 
-
-        public void Add(MovieVM movieVM)
+        public int Add(MovieVM movieVM)
         {
+            // duplicated name validation
             if (!_context.Movies.Any(t => t.Title.Equals(movieVM.Title)))
             {
                 try
@@ -30,10 +29,10 @@ namespace AlkemyTest.Data.Services
                         Title = movieVM.Title,
                         CreatedAt = movieVM.CreatedAt,
                         Qualification = movieVM.Qualification
-
                     };
                     _context.Movies.Add(_movie);
                     _context.SaveChanges();
+                    return _movie.Id;
                 }
                 catch (Exception)
                 {
@@ -42,15 +41,15 @@ namespace AlkemyTest.Data.Services
             }
             else
             {
-                throw new();
+                throw new("Duplicated Name");
             }
         }
 
-        public  List<MovieVM> GetAll() {
+        public List<MovieVM> GetAll()
+        {
             try
             {
-
-                var _movies = _context.Movies.Select(t => new MovieVM
+                List<MovieVM> _movies = _context.Movies.Select(t => new MovieVM
                 {
                     Id = t.Id,
                     Image = t.Image,
@@ -71,23 +70,103 @@ namespace AlkemyTest.Data.Services
                         Age = cm.Character.Age,
                         Weight = cm.Character.Weight,
                         History = cm.Character.History
-
                     }).ToList()
-
                 }).ToList();
-
                 return _movies;
             }
             catch (Exception)
             {
-
                 throw;
             }
 
-            
+
         }
 
+        public MovieVM GetById(int id)
+        {
+            try
+            {
+                MovieVM _movies = _context.Movies.Where(n => n.Id == id)
+                    .Select(t => new MovieVM
+                    {
+                        Id = t.Id,
+                        Image = t.Image,
+                        Title = t.Title,
+                        CreatedAt = t.CreatedAt,
+                        Qualification = t.Qualification,
+                        Genres = t.Movie_Genres.Select(mg => new GenreVM()
+                        {
+                            Id = mg.Genre.Id,
+                            Name = mg.Genre.Name,
+                            Image = mg.Genre.Image
+                        }).ToList(),
+                        Characters = t.Character_Movies.Select(cm => new CharacterVM()
+                        {
+                            Id = cm.Character.Id,
+                            Image = cm.Character.Image,
+                            Name = cm.Character.Name,
+                            Age = cm.Character.Age,
+                            Weight = cm.Character.Weight,
+                            History = cm.Character.History
+                        }).ToList()
+                    }).FirstOrDefault();
+                return _movies;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
 
+        }
+
+        public string Delete(int id)
+        {
+            Movie _movie = _context.Movies.Find(id);
+            if (_movie == null)
+            {
+                return "Not Found";
+            }
+            _context.Movies.Remove(_movie);
+            _context.SaveChangesAsync();
+            return "Ok";
+        }
+
+        public string Update(int id, MovieVM _movieVM)
+        {
+            if (id != _movieVM.Id)
+            {
+                return "Bad Request";
+            }
+            MovieVM movie = new MovieVM()
+            {
+                Id = _movieVM.Id,
+                Image = _movieVM.Image,
+                Title = _movieVM.Title,
+                CreatedAt = _movieVM.CreatedAt,
+                Qualification = _movieVM.Qualification
+            };
+
+            _context.Entry(movie).State = EntityState.Modified;
+
+            try
+            {
+                _context.SaveChangesAsync();
+                return "Ok";
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MovieExists(id))
+                {
+                    return "Not Found";
+                }
+                throw;
+            }
+        }
+
+        private bool MovieExists(int id)
+        {
+            return _context.Movies.Any(e => e.Id == id);
+        }
     }
 }
