@@ -1,5 +1,6 @@
 ﻿using AlkemyTest.Data.Services;
 using AlkemyTest.Data.ViewModels;
+using AlkemyTest.QueryFiltesrs;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -19,11 +20,13 @@ namespace AlkemyTest.Controllers
 
         // GET: api/Movies
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get([FromQuery] MovieFilter filter)
         {
             try
             {
-                List<MovieVM> _movies = _movieService.GetAll();
+                List<MovieGetVM> _movies = _movieService.GetAll(filter);
+
+
                 return Ok(_movies);
 
             }
