@@ -13,7 +13,6 @@ namespace AlkemyTest.Data.Models
         [MaxLength(50)]
         public string Name { get; set; }
         public string Image { get; set; }
-
         public virtual List<Movie_Genre> Movie_Genres { get; set; }
     }
     
