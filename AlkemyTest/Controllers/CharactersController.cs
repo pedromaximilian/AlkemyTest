@@ -1,12 +1,8 @@
-﻿using AlkemyTest.Data;
-using AlkemyTest.Data.Services;
+﻿using AlkemyTest.Data.Services;
 using AlkemyTest.Data.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AlkemyTest.Controllers
 {
@@ -14,7 +10,6 @@ namespace AlkemyTest.Controllers
     [ApiController]
     public class CharactersController : ControllerBase
     {
-
         private readonly CharacterService _characterService;
 
         public CharactersController(CharacterService characterService)
@@ -24,11 +19,11 @@ namespace AlkemyTest.Controllers
 
         // GET: api/Characters
         [HttpGet]
-        public  IActionResult Get()
+        public IActionResult Get()
         {
             try
             {
-                var chars = _characterService.GetNameImage();
+                List<CharacterNameImageVM> chars = _characterService.GetNameImage();
                 return Ok(chars);
             }
             catch (Exception)
@@ -41,7 +36,7 @@ namespace AlkemyTest.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var _character = _characterService.GetById(id);
+            CharacterVM _character = _characterService.GetById(id);
             if (_character != null)
             {
                 return Ok(_character);
@@ -52,18 +47,15 @@ namespace AlkemyTest.Controllers
             }
         }
 
-
         // POST: api/Characters
         [HttpPost]
         public IActionResult PostCharacter(CharacterVM character)
         {
             try
             {
-                //TODO: podria devolver el ultimo id creado.
-                var response = _characterService.Add(character);
-
-                    return Ok(new {id = response });
-
+                //TODO: devuelve el ultimo id creado.
+                int response = _characterService.Add(character);
+                return Ok(new { id = response });
             }
             catch (Exception ex)
             {
@@ -77,7 +69,7 @@ namespace AlkemyTest.Controllers
         {
             try
             {
-                var message = _characterService.Update(id, characterVM);
+                string message = _characterService.Update(id, characterVM);
 
                 if (message.Equals("Ok"))
                 {
@@ -100,9 +92,7 @@ namespace AlkemyTest.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-
-            var response = _characterService.Delete(id);
-
+            string response = _characterService.Delete(id);
             if (response.Equals("Ok"))
             {
                 return Ok();
@@ -113,7 +103,5 @@ namespace AlkemyTest.Controllers
             }
 
         }
-
-
     }
 }

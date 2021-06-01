@@ -1,12 +1,10 @@
 ﻿using AlkemyTest.Data.Models;
 using AlkemyTest.Data.ViewModels;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AlkemyTest.Data.Services
 {
@@ -19,11 +17,11 @@ namespace AlkemyTest.Data.Services
             _context = context;
         }
 
-        public int Add(CharacterVM character) {
+        public int Add(CharacterVM character)
+        {
             // duplicated name validation
             if (!_context.Characters.Any(t => t.Name.Equals(character.Name)))
             {
-                //TODO: agregar peliculas
                 try
                 {
                     Character _character = new Character()
@@ -38,9 +36,9 @@ namespace AlkemyTest.Data.Services
                     _context.SaveChanges();
                     return _character.Id;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw new(ex.Message);
+                    throw;
                 }
             }
             else
@@ -51,33 +49,9 @@ namespace AlkemyTest.Data.Services
 
         }
 
-        public CharacterVM GetById(int id)
+        public List<CharacterVM> GetAll()
         {
-            var _character = _context.Characters.FirstOrDefault(t => t.Id == id);
-
-            if (_character != null)
-            {
-                return new CharacterVM()
-                {
-                    Id = _character.Id,
-                    Image = _character.Image,
-                    Name = _character.Name,
-                    Age = _character.Age,
-                    Weight = _character.Weight,
-                    History = _character.History
-                };
-            }
-            else
-            {
-                return null;
-            }
-
-
-            
-        }
-
-        public List<CharacterVM> GetAll() {
-
+            //TODO: no esta en los requerimientos, eliminar?
             try
             {
                 return _context.Characters.Select(p => new CharacterVM
@@ -91,36 +65,66 @@ namespace AlkemyTest.Data.Services
             }
             catch (Exception)
             {
-
                 throw;
             }
+        }
 
-
-
+        public CharacterVM GetById(int id)
+        {
+            try
+            {
+                CharacterVM _characterVM = _context.Characters.Where(n => n.Id == id)
+                    .Select(c => new CharacterVM()
+                    {
+                        Id = c.Id,
+                        Image = c.Image,
+                        Name = c.Name,
+                        Age = c.Age,
+                        Weight = c.Weight,
+                        History = c.History,
+                        Movies = c.Character_Movies.Select(cm => new MovieVM()
+                        {
+                            Id = cm.Movie.Id,
+                            Image = cm.Movie.Image,
+                            Title = cm.Movie.Title,
+                            CreatedAt = cm.Movie.CreatedAt,
+                            Qualification = cm.Movie.Qualification,
+                            Genres = cm.Movie.Movie_Genres.Select(mg => new GenreVM()
+                            {
+                                Id = mg.Genre.Id,
+                                Image = mg.Genre.Image,
+                                Name = mg.Genre.Name
+                            }).ToList()
+                        }).ToList()
+                    }).FirstOrDefault();
+                return _characterVM;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public string Delete(int id)
         {
-            var character = _context.Characters.Find(id);
+            Character character = _context.Characters.Find(id);
             if (character == null)
             {
                 return "Not Found";
             }
-
             _context.Characters.Remove(character);
             _context.SaveChangesAsync();
-
             return "Ok";
         }
 
-        public String Update(int id,CharacterVM _character)
+        public string Update(int id, CharacterVM _character)
         {
             if (id != _character.Id)
             {
                 return "Bad Request";
             }
 
-            var character = new Character()
+            Character character = new Character()
             {
                 Id = _character.Id,
                 Image = _character.Image,
@@ -130,12 +134,11 @@ namespace AlkemyTest.Data.Services
                 History = _character.History
             };
 
-
             _context.Entry(character).State = EntityState.Modified;
 
             try
             {
-                 _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
                 return "Ok";
             }
             catch (DbUpdateConcurrencyException)

@@ -14,6 +14,6 @@ namespace AlkemyTest.Data.ViewModels
         public int Age { get; set; }
         public float Weight { get; set; }
         public string History { get; set; }
-        //public virtual List<Cast> Casts { get; set; }
+        public virtual List<MovieVM> Movies { get; set; }
     }
 }
