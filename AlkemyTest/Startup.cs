@@ -80,6 +80,7 @@ namespace AlkemyTest
             services.AddScoped<UserService>();
             services.AddTransient<CharacterService>();
             services.AddTransient<MovieService>();
+            services.AddTransient<MailService>();
 
 
             services.AddControllers();
