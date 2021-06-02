@@ -1,5 +1,6 @@
 ﻿using AlkemyTest.Data.Services;
 using AlkemyTest.Data.ViewModels;
+using AlkemyTest.QueryFiltesrs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,7 +10,7 @@ namespace AlkemyTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CharactersController : ControllerBase
     {
         private readonly CharacterService _characterService;
@@ -21,11 +22,11 @@ namespace AlkemyTest.Controllers
 
         // GET: api/Characters
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get([FromQuery] CharacterFilter filter)
         {
             try
             {
-                List<CharacterGetVM> chars = _characterService.GetNameImage();
+                List<CharacterGetVM> chars = _characterService.GetAll(filter);
                 return Ok(chars);
             }
             catch (Exception)
