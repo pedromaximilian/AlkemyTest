@@ -1,5 +1,6 @@
 ﻿using AlkemyTest.Data.Models;
 using AlkemyTest.Data.ViewModels;
+using AlkemyTest.QueryFiltesrs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -49,15 +50,11 @@ namespace AlkemyTest.Data.Services
 
         }
 
-        public List<CharacterVM> GetAll()
+        public List<CharacterGetVM> GetAll(CharacterFilter filter)
         {
             //TODO: no esta en los requerimientos, eliminar?
             try
             {
-<<<<<<< Updated upstream
-                return _context.Characters.Select(p => new CharacterVM
-=======
-
                 if (filter.Age != 0 || filter.Name != null || filter.IdMovie !=0)
                 {
                     var _characterVM = _context.Characters
@@ -86,7 +83,9 @@ namespace AlkemyTest.Data.Services
                     }
                     if (filter.Name != null)
                     {
+
                         _characterVM = _characterVM.Where(t => t.Name.ToLower().Contains(filter.Name.ToLower())).ToList();
+
                     }
                     if (filter.IdMovie != 0)
                     {
@@ -106,14 +105,14 @@ namespace AlkemyTest.Data.Services
                 else
                 {
                     return _context.Characters.Select(p => new CharacterGetVM
->>>>>>> Stashed changes
+
                 {
                     Image = p.Image,
                     Name = p.Name,
-                    Age = p.Age,
-                    Weight = p.Weight,
-                    History = p.History
                 }).ToList();
+                }
+
+                
             }
             catch (Exception)
             {
@@ -205,16 +204,6 @@ namespace AlkemyTest.Data.Services
                 }
             }
 
-        }
-
-        public List<CharacterGetVM> GetNameImage()
-        {
-
-            return _context.Characters.Select(p => new CharacterGetVM
-            {
-                Image = p.Image,
-                Name = p.Name
-            }).ToList();
         }
 
         private bool CharacterExists(int id)
