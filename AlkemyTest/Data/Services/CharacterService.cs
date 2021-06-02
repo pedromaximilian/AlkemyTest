@@ -55,7 +55,6 @@ namespace AlkemyTest.Data.Services
             //TODO: no esta en los requerimientos, eliminar?
             try
             {
-
                 if (filter.Age != 0 || filter.Name != null || filter.IdMovie !=0)
                 {
                     var _characterVM = _context.Characters
@@ -84,7 +83,9 @@ namespace AlkemyTest.Data.Services
                     }
                     if (filter.Name != null)
                     {
-                        _characterVM = _characterVM.Where(t => t.Name.Contains(filter.Name)).ToList();
+
+                        _characterVM = _characterVM.Where(t => t.Name.ToLower().Contains(filter.Name.ToLower())).ToList();
+
                     }
                     if (filter.IdMovie != 0)
                     {
@@ -104,6 +105,7 @@ namespace AlkemyTest.Data.Services
                 else
                 {
                     return _context.Characters.Select(p => new CharacterGetVM
+
                 {
                     Image = p.Image,
                     Name = p.Name,
