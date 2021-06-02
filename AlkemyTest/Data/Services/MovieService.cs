@@ -100,10 +100,6 @@ namespace AlkemyTest.Data.Services
                         }
                     }
 
-                   
-
-
-
                     var res = _movies.Select(t => new MovieGetVM
                     {
                         Image = t.Image,
@@ -122,10 +118,7 @@ namespace AlkemyTest.Data.Services
                         CreatedAt = t.CreatedAt,                        
                     }).ToList();
 
-
                     return _movies;
-
-
                 }
 
 

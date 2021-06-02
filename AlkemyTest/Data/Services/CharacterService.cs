@@ -54,7 +54,59 @@ namespace AlkemyTest.Data.Services
             //TODO: no esta en los requerimientos, eliminar?
             try
             {
+<<<<<<< Updated upstream
                 return _context.Characters.Select(p => new CharacterVM
+=======
+
+                if (filter.Age != 0 || filter.Name != null || filter.IdMovie !=0)
+                {
+                    var _characterVM = _context.Characters
+                    .Select(c => new CharacterVM()
+                    {
+                        Id = c.Id,
+                        Image = c.Image,
+                        Name = c.Name,
+                        Age = c.Age,
+                        Weight = c.Weight,
+                        History = c.History,
+                        Movies = c.Character_Movies.Select(cm => new MovieVM()
+                        {
+                            Id = cm.Movie.Id,
+                            Image = cm.Movie.Image,
+                            Title = cm.Movie.Title,
+                            CreatedAt = cm.Movie.CreatedAt,
+                            Qualification = cm.Movie.Qualification
+                        }).ToList()
+                    }).ToList();
+
+                    if (filter.Age != 0)
+                    {
+                        _characterVM = _characterVM.Where(t => t.Age == filter.Age).ToList();
+
+                    }
+                    if (filter.Name != null)
+                    {
+                        _characterVM = _characterVM.Where(t => t.Name.ToLower().Contains(filter.Name.ToLower())).ToList();
+                    }
+                    if (filter.IdMovie != 0)
+                    {
+                        _characterVM = _characterVM.Where(t => t.Movies.Any(n => n.Id == filter.IdMovie)).ToList();
+                    }
+
+                    var res = _characterVM.Select(t => new CharacterGetVM 
+                    {
+                        Image = t.Image,
+                        Name = t.Name
+                    }
+                    ).ToList();
+
+                    return res;
+
+                }
+                else
+                {
+                    return _context.Characters.Select(p => new CharacterGetVM
+>>>>>>> Stashed changes
                 {
                     Image = p.Image,
                     Name = p.Name,
