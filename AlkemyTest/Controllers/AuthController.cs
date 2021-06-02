@@ -37,7 +37,7 @@ namespace AlkemyTest.Controllers
 
                     if (response.IsSuccess)
                     {
-                        //await _mailService.SendMail(userRegisterVM.Email, "New Register", "<h1>Congrats! You are now registered</h1>");
+                        await _mailService.SendMail(userRegisterVM.Email, "New Register", "<h1>Congrats! You are now registered</h1>");
                         return Ok(response);
                     }
                     return BadRequest(response);
@@ -64,8 +64,7 @@ namespace AlkemyTest.Controllers
                 var result = await _userService.Login(loginVM);
 
                 if (result.IsSuccess)
-                {
-                    await _mailService.SendMail(loginVM.Email, "New Register", "<h1>Congrats! You are now registered</h1>");
+                { 
                     return Ok(result);
                 }
                 else
