@@ -35,6 +35,7 @@ namespace AlkemyTest
 
             //configura services
             services.AddTransient<CharacterService>();
+            services.AddTransient<MovieService>();
 
 
 

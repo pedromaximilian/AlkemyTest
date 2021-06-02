@@ -1,5 +1,6 @@
 ﻿using AlkemyTest.Data.Services;
 using AlkemyTest.Data.ViewModels;
+using AlkemyTest.QueryFiltesrs;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,38 +9,45 @@ namespace AlkemyTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CharactersController : ControllerBase
+    public class MoviesController : ControllerBase
     {
-        private readonly CharacterService _characterService;
+        private readonly MovieService _movieService;
 
-        public CharactersController(CharacterService characterService)
+        public MoviesController(MovieService movieService)
         {
-            _characterService = characterService;
+            _movieService = movieService;
         }
 
-        // GET: api/Characters
+        // GET: api/Movies
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get([FromQuery] MovieFilter filter)
         {
             try
             {
-                List<CharacterGetVM> chars = _characterService.GetNameImage();
-                return Ok(chars);
+                List<MovieGetVM> _movies = _movieService.GetAll(filter);
+
+
+                return Ok(_movies);
+
             }
             catch (Exception)
             {
+
                 return NotFound();
             }
+
+
+
         }
 
-        // GET api/Characters/5
+        // GET api/Movies/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult GetById(int id)
         {
-            CharacterVM _character = _characterService.GetById(id);
-            if (_character != null)
+            MovieVM _movie = _movieService.GetById(id);
+            if (_movie != null)
             {
-                return Ok(_character);
+                return Ok(_movie);
             }
             else
             {
@@ -47,14 +55,14 @@ namespace AlkemyTest.Controllers
             }
         }
 
-        // POST: api/Characters
+        // POST api/Movies
         [HttpPost]
-        public IActionResult PostCharacter(CharacterVM character)
+        public IActionResult Post(MovieVM _movieVM)
         {
             try
             {
                 //TODO: devuelve el ultimo id creado.
-                int response = _characterService.Add(character);
+                int response = _movieService.Add(_movieVM);
                 return Ok(new { id = response });
             }
             catch (Exception ex)
@@ -63,13 +71,13 @@ namespace AlkemyTest.Controllers
             }
         }
 
-        // PUT api/Characters/5
+        // PUT api/<MoviesController>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, CharacterVM characterVM)
+        public IActionResult Put(int id, MovieVM _movieVM)
         {
             try
             {
-                string message = _characterService.Update(id, characterVM);
+                string message = _movieService.Update(id, _movieVM);
 
                 if (message.Equals("Ok"))
                 {
@@ -85,14 +93,13 @@ namespace AlkemyTest.Controllers
 
                 return BadRequest(ex.Message);
             }
-
         }
 
-        // DELETE api/Characters/5
+        // DELETE api/<MoviesController>/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            string response = _characterService.Delete(id);
+            string response = _movieService.Delete(id);
             if (response.Equals("Ok"))
             {
                 return Ok();
@@ -101,7 +108,6 @@ namespace AlkemyTest.Controllers
             {
                 return BadRequest(response);
             }
-
         }
     }
 }

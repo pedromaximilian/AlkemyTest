@@ -4,14 +4,16 @@ using AlkemyTest.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AlkemyTest.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210529190353_allModelRelations")]
+    partial class allModelRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,7 +131,7 @@ namespace AlkemyTest.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.ToTable("Movie_Genres");
+                    b.ToTable("GetMovie_Genres");
                 });
 
             modelBuilder.Entity("AlkemyTest.Data.Models.Character_Movie", b =>
