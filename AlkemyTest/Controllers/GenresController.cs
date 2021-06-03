@@ -9,11 +9,13 @@ using AlkemyTest.Data;
 using AlkemyTest.Data.Models;
 using AlkemyTest.Data.Services;
 using AlkemyTest.Data.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AlkemyTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class GenresController : ControllerBase
     {
         private readonly GenreService _genreService;

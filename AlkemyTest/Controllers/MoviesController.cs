@@ -1,6 +1,7 @@
 ﻿using AlkemyTest.Data.Services;
 using AlkemyTest.Data.ViewModels;
 using AlkemyTest.QueryFiltesrs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace AlkemyTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MoviesController : ControllerBase
     {
         private readonly MovieService _movieService;

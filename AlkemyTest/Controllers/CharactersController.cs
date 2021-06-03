@@ -10,7 +10,7 @@ namespace AlkemyTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class CharactersController : ControllerBase
     {
         private readonly CharacterService _characterService;
