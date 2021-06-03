@@ -78,6 +78,7 @@ namespace AlkemyTest
 
             //configura services
             services.AddScoped<UserService>();
+            services.AddTransient<GenreService>();
             services.AddTransient<CharacterService>();
             services.AddTransient<MovieService>();
             services.AddTransient<MailService>();

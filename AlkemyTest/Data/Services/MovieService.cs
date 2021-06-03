@@ -18,7 +18,7 @@ namespace AlkemyTest.Data.Services
             _context = context;
         }
 
-        public int Add(MovieVM movieVM)
+        public int Add(MoviePostVM movieVM)
         {
             // duplicated name validation
             if (!_context.Movies.Any(t => t.Title.Equals(movieVM.Title)))
@@ -208,6 +208,55 @@ namespace AlkemyTest.Data.Services
                 {
                     return "Not Found";
                 }
+                throw;
+            }
+        }
+
+        public string AddCharacter(int _MovieId, int _CharacterId)
+        {
+            try
+            {
+                var res = _context.Character_Movies.Where(t => t.CharacterId == _CharacterId && t.MovieId == _MovieId).FirstOrDefault();
+
+                if (res == null)
+                {
+
+                    var _character_movie = new Character_Movie()
+                    {
+                        CharacterId = _CharacterId,
+                        MovieId = _MovieId
+                    };
+
+                    var reresponse = _context.Character_Movies.Add(_character_movie);
+
+                    var response2 = _context.SaveChanges();
+                }
+                return "Ok";
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public string DeleteCharacter(int MovieId, int CharacterId)
+        {
+            try
+            {
+                var res = _context.Character_Movies.Where(t => t.CharacterId == CharacterId && t.MovieId == MovieId).FirstOrDefault();
+
+                if (res != null)
+                {
+                    _context.Character_Movies.Remove(res);
+                    _context.SaveChanges();
+                }
+                return "Ok";
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }

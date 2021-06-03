@@ -6,14 +6,18 @@ using System.Threading.Tasks;
 
 namespace AlkemyTest.Data.ViewModels
 {
-    public class MovieGetVM
+    public class CharacterPostVM
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "{0} is required")]
-        [MaxLength(100)]
+        [MaxLength(50)]
         public string Image { get; set; }
         [Required(ErrorMessage = "{0} is required")]
         [MaxLength(50)]
-        public string Title { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public float? Weight { get; set; }
+        [Required(ErrorMessage = "{0} is required")]
+        public string History { get; set; }
     }
 }

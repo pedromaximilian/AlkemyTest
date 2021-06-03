@@ -8,11 +8,14 @@ using Microsoft.EntityFrameworkCore;
 using AlkemyTest.Data;
 using AlkemyTest.Data.Models;
 using AlkemyTest.Data.Services;
+using AlkemyTest.Data.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AlkemyTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class GenresController : ControllerBase
     {
         private readonly GenreService _genreService;
@@ -24,84 +27,85 @@ namespace AlkemyTest.Controllers
 
         // GET: api/Genres
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Genre>>> GetGenres()
+        public IActionResult GetGenres()
         {
-            return await _genreService.GetGenres();
+            return Ok(_genreService.GetAll());
         }
 
         // GET: api/Genres/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Genre>> GetGenre(int id)
+        public IActionResult Get(int id)
         {
-            var genre = await _context.Genres.FindAsync(id);
+            var genre = _genreService.GetById(id);
 
-            if (genre == null)
+            if (genre != null)
             {
-                return NotFound();
+                return Ok(genre);
             }
 
-            return genre;
+            return NotFound();
         }
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutGenre(int id, Genre genre)
+        public IActionResult Put(int id, GenreVM genre)
         {
             if (id != genre.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(genre).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GenreExists(id))
+                string message = _genreService.Update(id, genre);
+
+                if (message.Equals("Ok"))
                 {
-                    return NotFound();
+                    return Ok();
                 }
                 else
                 {
-                    throw;
+                    return BadRequest(message);
                 }
             }
+            catch (Exception ex)
+            {
 
-            return NoContent();
+                return BadRequest(ex.Message);
+            }
+
+
         }
 
         // POST: api/Genres
         [HttpPost]
-        public async Task<ActionResult<Genre>> PostGenre(Genre genre)
+        public IActionResult PostGenre(GenreVM genre)
         {
-            _context.Genres.Add(genre);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetGenre", new { id = genre.Id }, genre);
+            try
+            {
+                int response = _genreService.Add(genre);
+                return Ok(new { id = response });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/Genres/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGenre(int id)
         {
-            var genre = await _context.Genres.FindAsync(id);
-            if (genre == null)
+            var response = _genreService.Delete(id);
+            if (response.Equals("Ok"))
             {
-                return NotFound();
+                return Ok();
             }
-
-            _context.Genres.Remove(genre);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            else
+            {
+                return BadRequest(response);
+            }
         }
 
-        private bool GenreExists(int id)
-        {
-            return _context.Genres.Any(e => e.Id == id);
-        }
     }
 }
