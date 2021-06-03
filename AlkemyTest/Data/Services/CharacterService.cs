@@ -18,10 +18,10 @@ namespace AlkemyTest.Data.Services
             _context = context;
         }
 
-        public int Add(CharacterVM character)
+        public int Add(CharacterPostVM character)
         {
             // duplicated name validation
-            if (!_context.Characters.Any(t => t.Name.Equals(character.Name)))
+            if (!_context.Characters.Any(t => t.Name.ToLower().Equals(character.Name.ToLower())))
             {
                 try
                 {
@@ -170,41 +170,90 @@ namespace AlkemyTest.Data.Services
 
         public string Update(int id, CharacterVM _character)
         {
-            if (id != _character.Id)
-            {
-                return "Bad Request";
-            }
-
-            Character character = new Character()
-            {
-                Id = _character.Id,
-                Image = _character.Image,
-                Name = _character.Name,
-                Age = _character.Age,
-                Weight = _character.Weight,
-                History = _character.History
-            };
-
-            _context.Entry(character).State = EntityState.Modified;
-
             try
-            {
-                _context.SaveChangesAsync();
-                return "Ok";
-            }
-            catch (DbUpdateConcurrencyException)
             {
                 if (!CharacterExists(id))
                 {
                     return "Not Found";
                 }
-                else
+                if (id != _character.Id)
                 {
-                    throw;
+                    return "Bad Request";
                 }
+
+                Character character = new Character()
+                {
+                    Id = _character.Id,
+                    Image = _character.Image,
+                    Name = _character.Name,
+                    Age = _character.Age,
+                    Weight = _character.Weight,
+                    History = _character.History
+                };
+
+                _context.Entry(character).State = EntityState.Modified;
+                _context.SaveChangesAsync();
+
+                
+                return "Ok";
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                    throw;
             }
 
         }
+
+
+        public string AddMovie(int _CharacterId, int _MovieId)
+        {
+            try
+            {
+                var res = _context.Character_Movies.Where(t => t.CharacterId == _CharacterId && t.MovieId == _MovieId).FirstOrDefault();
+
+                if (res == null)
+                {
+
+                    var _character_movie = new Character_Movie()
+                    {
+                        CharacterId = _CharacterId,
+                        MovieId = _MovieId
+                    };
+
+                    var reresponse = _context.Character_Movies.Add(_character_movie);
+
+                    var response2 =_context.SaveChanges();
+                }
+                return "Ok";  
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public string DeleteMovie(int CharacterId, int MovieId)
+        {
+            try
+            {
+                var res = _context.Character_Movies.Where(t => t.CharacterId == CharacterId && t.MovieId == MovieId).FirstOrDefault();
+
+                if (res != null)
+                {
+                    _context.Character_Movies.Remove(res);
+                    _context.SaveChanges();
+                }
+                return "Ok";
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         private bool CharacterExists(int id)
         {
