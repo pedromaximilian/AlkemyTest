@@ -157,17 +157,106 @@ namespace AlkemyTest.Data
                         context.SaveChanges();
 
                     }
+
+                    if (!context.Movie_Genres.Any())
+                    {
+                        IList<Movie_Genre> list = new List<Movie_Genre>();
+                        
+                        var a = new Movie_Genre()
+                        {
+                            MovieId = 1,
+                            GenreId = 1
+                        };
+                        list.Add(a);
+                        var b =new Movie_Genre()
+                        {
+                            MovieId = 2,
+                            GenreId = 1
+                        };
+                        list.Add(b);
+                        var c =new Movie_Genre()
+                        {
+                            MovieId = 2,
+                            GenreId = 2
+                        };
+                        list.Add(c);
+                        var d= new Movie_Genre()
+                        {
+                            MovieId = 1,
+                            GenreId = 4
+                        };
+                        list.Add(d);
+                        var e= new Movie_Genre()
+                        {
+                            MovieId = 5,
+                            GenreId = 4
+                        };
+                        list.Add(e);
+                        var f = new Movie_Genre()
+                        {
+                            MovieId = 5,
+                            GenreId = 5
+                        };
+                        list.Add(f);
+                        context.AddRange(list);
+                        context.SaveChanges();
+                    }
+
+                    if (!context.Character_Movies.Any())
+                    {
+                        var list = new List<Character_Movie>();
+                        var a = new Character_Movie()
+                        {
+                            CharacterId = 1,
+                            MovieId = 1
+                        };
+                        list.Add(a);
+                        var b = new Character_Movie()
+                        {
+                            CharacterId = 3,
+                            MovieId = 2
+                        };
+                        list.Add(b);
+                        var c = new Character_Movie()
+                        {
+                            CharacterId = 5,
+                            MovieId = 2
+                        };
+                        list.Add(c);
+                        var d = new Character_Movie()
+                        {
+                            CharacterId = 1,
+                            MovieId = 3
+                        };
+                        list.Add(d);
+                        var e = new Character_Movie()
+                        {
+                            CharacterId = 2,
+                            MovieId = 5
+                        };
+                        list.Add(e);
+                        var f = new Character_Movie()
+                        {
+                            CharacterId = 1,
+                            MovieId = 5
+                            
+                        };
+                        list.Add(f);
+
+                        context.AddRange(list);
+                        context.SaveChanges();
+                    }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
                     //*******************************************************
-                    //
+                    //                  Create Database and
                     //              run update-database command
                     //                  at least one time
                     //
                     //*******************************************************
-                    throw new("Possible database connection error");
+                    throw new(ex.Message);
                 
                 }
 
