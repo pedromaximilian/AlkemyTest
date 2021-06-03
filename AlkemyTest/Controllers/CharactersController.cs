@@ -52,8 +52,13 @@ namespace AlkemyTest.Controllers
 
         // POST: api/Characters
         [HttpPost]
-        public IActionResult PostCharacter(CharacterVM character)
+        public IActionResult PostCharacter(CharacterPostVM character)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("check object properties");
+            }
+
             try
             {
                 //TODO: devuelve el ultimo id creado.
@@ -70,6 +75,10 @@ namespace AlkemyTest.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, CharacterVM characterVM)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("check object properties");
+            }
             try
             {
                 string message = _characterService.Update(id, characterVM);
@@ -85,7 +94,6 @@ namespace AlkemyTest.Controllers
             }
             catch (Exception ex)
             {
-
                 return BadRequest(ex.Message);
             }
 
@@ -104,7 +112,45 @@ namespace AlkemyTest.Controllers
             {
                 return BadRequest(response);
             }
+        }
 
+        // PUT api/Characters/5/Movie/
+        [HttpPut("{id_c}/Movie/{id_m}")]
+        public IActionResult PutMovie(int id_c, int id_m)
+        {
+            try
+            {
+                string message = _characterService.AddMovie(id_c, id_m);
+
+                if (message.Equals("Ok"))
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        // DELETE api/Characters/5/Movie/1
+        [HttpDelete("{id_c}/Movie/{id_m}")]
+        public IActionResult DeleteMovie(int id_c, int id_m)
+        {
+            string response = _characterService.DeleteMovie(id_c, id_m);
+            if (response.Equals("Ok"))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(response);
+            }
         }
     }
 }

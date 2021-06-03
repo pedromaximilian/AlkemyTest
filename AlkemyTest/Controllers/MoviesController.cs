@@ -57,8 +57,12 @@ namespace AlkemyTest.Controllers
 
         // POST api/Movies
         [HttpPost]
-        public IActionResult Post(MovieVM _movieVM)
+        public IActionResult Post(MoviePostVM _movieVM)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("check object properties");
+            }
             try
             {
                 //TODO: devuelve el ultimo id creado.
@@ -75,6 +79,10 @@ namespace AlkemyTest.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, MovieVM _movieVM)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("check object properties");
+            }
             try
             {
                 string message = _movieService.Update(id, _movieVM);
@@ -100,6 +108,46 @@ namespace AlkemyTest.Controllers
         public IActionResult Delete(int id)
         {
             string response = _movieService.Delete(id);
+            if (response.Equals("Ok"))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(response);
+            }
+        }
+
+
+
+        // PUT api/Characters/5/Movie/
+        [HttpPut("{id_m}/Character/{id_c}")]
+        public IActionResult PutMovie(int id_m, int id_c)
+        {
+            try
+            {
+                string message = _movieService.AddCharacter(id_c, id_m);
+
+                if (message.Equals("Ok"))
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // DELETE api/Characters/5/Movie/1
+        [HttpDelete("{id_m}/Character/{id_c}")]
+        public IActionResult DeleteMovie(int id_m, int id_c)
+        {
+            string response = _movieService.DeleteCharacter(id_m, id_c);
             if (response.Equals("Ok"))
             {
                 return Ok();
