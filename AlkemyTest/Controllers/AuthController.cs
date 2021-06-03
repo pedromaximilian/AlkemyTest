@@ -52,9 +52,7 @@ namespace AlkemyTest.Controllers
 
                 return BadRequest(ex.Message);
             }
-
         }
-
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginVM loginVM)
